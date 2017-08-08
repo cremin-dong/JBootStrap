@@ -31,4 +31,4 @@ AdminLTE
 组织架构管理（开发中...）   
 权限管理（开发中...）   
 数据字典管理（开发中...）   
-#![image](https://github.com/ButBueatiful/dotvim/raw/master/screenshots/vim-screenshot.jpg)
+#![image](https://raw.githubusercontent.com/cremin-dong/JBootStrap/master/document/JBootStrap.png)
