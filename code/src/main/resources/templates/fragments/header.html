@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+     <header class="main-header" th:fragment="header">
+        <!-- Logo -->
+        <a href="index2.html" class="logo">
+           <!-- mini logo for sidebar mini 50x50 pixels -->
+           <span class="logo-mini"><b>Jbt</b></span>
+           <!-- logo for regular state and mobile devices -->
+           <span class="logo-lg"><b>Jbootstrap</b></span>
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top">
+           <!-- Sidebar toggle button-->
+           <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+              <span class="sr-only">Toggle navigation</span>
+           </a>
+
+           <div class="navbar-custom-menu">
+              <ul class="nav navbar-nav">
+                 <!-- Messages: style can be found in dropdown.less-->
+                 <li class="dropdown messages-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                       <i class="fa fa-envelope-o"></i>
+                       <span class="label label-success">4</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                       <li class="header">你有4条未读消息</li>
+                       <li>
+                          <!-- inner menu: contains the actual data -->
+                          <ul class="menu">
+                             <li><!-- start message -->
+                                <a href="#">
+                                   <div class="pull-left">
+                                      <img th:src="@{/img/user2-160x160.jpg}" class="img-circle" alt="User Image">
+                                   </div>
+                                   <h4>
+                                      帅哥A
+                                   </h4>
+                                   <p>为什么你不买个手表?</p>
+                                </a>
+                             </li>
+                             <!-- end message -->
+                             <li>
+                                <a href="#">
+                                   <div class="pull-left">
+                                      <img th:src="@{/img/user3-128x128.jpg}" class="img-circle" alt="User Image">
+                                   </div>
+                                   <h4>
+                                      美女B
+                                   </h4>
+                                   <p>今天天气不错，约么?</p>
+                                </a>
+                             </li>
+                             <li>
+                                <a href="#">
+                                   <div class="pull-left">
+                                      <img th:src="@{/img/user4-128x128.jpg}" class="img-circle" alt="User Image">
+                                   </div>
+                                   <h4>
+                                      人妖C
+                                   </h4>
+                                   <p>想不想体验不同的魅力?</p>
+                                </a>
+                             </li>
+                             <li>
+                                <a href="#">
+                                   <div class="pull-left">
+                                      <img th:src="@{/img/user3-128x128.jpg}" class="img-circle" alt="User Image">
+                                   </div>
+                                   <h4>
+                                      护士D
+                                   </h4>
+                                   <p>哈哈哈哈哈哈哈！</p>
+                                </a>
+                             </li>
+                          </ul>
+                       </li>
+                       <li class="footer"><a href="#">查看所有消息</a></li>
+                    </ul>
+                 </li>
+
+                 <!-- User Account: style can be found in dropdown.less -->
+                 <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                       <img th:src="@{/img/user2-160x160.jpg}" class="user-image" alt="User Image">
+                       <span class="hidden-xs">cremin</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                       <!-- User image -->
+                       <li class="user-header">
+                          <img th:src="@{/img/user2-160x160.jpg}" class="img-circle" alt="User Image">
+
+                          <p>
+                             <h5> cremin -软件开发工程师</h5>
+                             <small>定一个小目标</small>
+                          </p>
+                       </li>
+                       <!-- Menu Body -->
+                       <li>
+                          <div class="row">
+                             <div class="col-xs-12">
+                                <div class="box-body">
+                                   <button type="button" class="btn btn-default btn-block" data-target="#modal-changeDescription" data-toggle="modal">修改信息</button>
+                                   <button type="button" class="btn btn-default btn-block btn-flat" data-target="#modal-ChangePass" data-toggle="modal">修改密码</button>
+                                   <button type="button" class="btn btn-default btn-block btn-sm" onclick="javascript:location.href='/logout'">注销</button>
+                                </div>
+
+                             </div>
+                          </div>
+                          <!-- /.row -->
+                       </li>
+                    </ul>
+                 </li>
+              </ul>
+           </div>
+        </nav>
+     </header>
+</body>
+
+</html>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <context id="jbootstrap" targetRuntime="MyBatis3">
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+        <plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin" />
+
+        <!-- 注释 -->
+        <commentGenerator>
+            <property name="suppressDate" value="false" /> <!-- 是否生成注释代时间戳-->
+            <property name="suppressAllComments" value="true" /><!-- 是否取消注释 -->
+        </commentGenerator>
+
+        <!-- jdbc连接 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.1.47:3306/jbootstrap" userId="root" password="123456">
+        </jdbcConnection>
+
+        <!-- 类型转换 -->
+        <javaTypeResolver>
+            <!-- 是否使用bigDecimal， false可自动转化以下类型（Long, Integer, Short, etc.） -->
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!-- 生成实体类地址 -->
+        <javaModelGenerator targetPackage="com.dmm.domain" targetProject="src/main/java">
+            <!--  for MyBatis3/MyBatis3Simple自动为每一个生成的类创建一个构造方法，构造方法包含了所有的field；而不是使用setter-->
+            <property name="constructorBased" value="false" />
+            <!-- 是否在当前路径下新加一层schema,eg：false:路径com.dmm.domain， true:com.dmm.domain.[schemaName] -->
+            <property name="enableSubPackages" value="false" />
+            <!-- 是否针对string类型的字段在set的时候进行trim调用 -->
+            <property name="trimStrings" value="true" />
+
+            <!-- 设置一个根对象，
+                如果设置了这个根对象，那么生成的keyClass或者recordClass会继承这个类；在Table的rootClass属性中可以覆盖该选项
+                注意：如果在key class或者record class中有root class相同的属性，MBG就不会重新生成这些属性了，包括：
+                   1，属性名相同，类型相同，有相同的getter/setter方法；
+             -->
+            <property name="rootClass" value="com.dmm.common.core.BaseDomain"/>
+        </javaModelGenerator>
+
+        <!-- 生成mapxml文件 -->
+        <sqlMapGenerator targetPackage="com.dmm.dao" targetProject="src/main/resources">
+            <!-- 是否在当前路径下新加一层schema,eg：false:路径com.dmm.domain， true:com.dmm.domain.[schemaName] -->
+            <property name="enableSubPackages" value="false" />
+        </sqlMapGenerator>
+
+        <!-- 生成mapxml对应client，也就是接口dao -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.dmm.dao"
+                             targetProject="src/main/java">
+            <!-- 是否在当前路径下新加一层schema,eg：false:路径com.dmm.domain， true:com.dmm.domain.[schemaName] -->
+            <property name="enableSubPackages" value="false" />
+            <property name="rootInterface" value="com.dmm.common.core.BaseMapper" />
+        </javaClientGenerator>
+
+
+        <!-- 配置表信息 schema即为数据库名 tableName为对应的数据库表 domainObjectName是要生成的实体类 -->
+        <table schema="jbootstrap" tableName="test_data" domainObjectName="TestData"
+               enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true">
+
+            <!-- 如果设置为true，生成的model类会直接使用column本身的名字，而不会再使用驼峰命名方法，比如BORN_DATE，生成的属性名字就是BORN_DATE,而不会是bornDate -->
+            <property name="useActualColumnNames" value="false" />
+
+            <!-- 默认为false，如果设置为true，在生成的SQL中，table名字不会加上catalog或schema； -->
+            <property name="ignoreQualifiersAtRuntime" value="true" />
+        </table>
+
+    </context>
+</generatorConfiguration>

@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dmm.module.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.dmm.module.domain.User">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="company_id" jdbcType="VARCHAR" property="companyId" />
+    <result column="office_id" jdbcType="VARCHAR" property="officeId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="no" jdbcType="VARCHAR" property="no" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="photo" jdbcType="VARCHAR" property="photo" />
+    <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />
+    <result column="login_date" jdbcType="TIMESTAMP" property="loginDate" />
+    <result column="login_flag" jdbcType="VARCHAR" property="loginFlag" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, company_id, office_id, username, password, no, name, email, phone, mobile, photo, 
+    login_ip, login_date, login_flag, remarks, create_by, create_date, update_by, update_date, 
+    del_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sys_user
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dmm.module.domain.User">
+    insert into sys_user (id, company_id, office_id, 
+      username, password, no, 
+      name, email, phone, 
+      mobile, photo, login_ip, 
+      login_date, login_flag, remarks, 
+      create_by, create_date, update_by, 
+      update_date, del_flag)
+    values (#{id,jdbcType=VARCHAR}, #{companyId,jdbcType=VARCHAR}, #{officeId,jdbcType=VARCHAR}, 
+      #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{no,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=VARCHAR}, #{photo,jdbcType=VARCHAR}, #{loginIp,jdbcType=VARCHAR}, 
+      #{loginDate,jdbcType=TIMESTAMP}, #{loginFlag,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dmm.module.domain.User">
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="companyId != null">
+        company_id,
+      </if>
+      <if test="officeId != null">
+        office_id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="no != null">
+        no,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="photo != null">
+        photo,
+      </if>
+      <if test="loginIp != null">
+        login_ip,
+      </if>
+      <if test="loginDate != null">
+        login_date,
+      </if>
+      <if test="loginFlag != null">
+        login_flag,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null">
+        #{companyId,jdbcType=VARCHAR},
+      </if>
+      <if test="officeId != null">
+        #{officeId,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="no != null">
+        #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="loginIp != null">
+        #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="loginDate != null">
+        #{loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginFlag != null">
+        #{loginFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dmm.module.domain.User">
+    update sys_user
+    <set>
+      <if test="companyId != null">
+        company_id = #{companyId,jdbcType=VARCHAR},
+      </if>
+      <if test="officeId != null">
+        office_id = #{officeId,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="no != null">
+        no = #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="loginIp != null">
+        login_ip = #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="loginDate != null">
+        login_date = #{loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginFlag != null">
+        login_flag = #{loginFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dmm.module.domain.User">
+    update sys_user
+    set company_id = #{companyId,jdbcType=VARCHAR},
+      office_id = #{officeId,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      no = #{no,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      photo = #{photo,jdbcType=VARCHAR},
+      login_ip = #{loginIp,jdbcType=VARCHAR},
+      login_date = #{loginDate,jdbcType=TIMESTAMP},
+      login_flag = #{loginFlag,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=CHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+  <!-- 这里写入自定义接口 -->
+  <select id="selectBySelective" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    <where>
+      <if test="companyId != null">
+        AND company_id = #{companyId,jdbcType=VARCHAR}
+      </if>
+      <if test="officeId != null">
+        AND office_id = #{officeId,jdbcType=VARCHAR}
+      </if>
+      <if test="username != null">
+        AND username = #{username,jdbcType=VARCHAR}
+      </if>
+      <if test="password != null">
+        AND password = #{password,jdbcType=VARCHAR}
+      </if>
+      <if test="no != null">
+        AND no = #{no,jdbcType=VARCHAR}
+      </if>
+      <if test="name != null">
+        AND name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="email != null">
+        AND email = #{email,jdbcType=VARCHAR}
+      </if>
+      <if test="phone != null">
+        AND phone = #{phone,jdbcType=VARCHAR}
+      </if>
+      <if test="mobile != null">
+        AND mobile = #{mobile,jdbcType=VARCHAR}
+      </if>
+      <if test="photo != null">
+        AND photo = #{photo,jdbcType=VARCHAR}
+      </if>
+      <if test="loginIp != null">
+        AND login_ip = #{loginIp,jdbcType=VARCHAR}
+      </if>
+      <if test="loginDate != null">
+        AND login_date = #{loginDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="loginFlag != null">
+        AND login_flag = #{loginFlag,jdbcType=VARCHAR}
+      </if>
+      <if test="remarks != null">
+        AND remarks = #{remarks,jdbcType=VARCHAR}
+      </if>
+      <if test="createBy != null">
+        AND create_by = #{createBy,jdbcType=VARCHAR}
+      </if>
+      <if test="createDate != null">
+        AND create_date = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateBy != null">
+        AND update_by = #{updateBy,jdbcType=VARCHAR}
+      </if>
+      <if test="updateDate != null">
+        AND update_date = #{updateDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="delFlag != null">
+        AND del_flag = #{delFlag,jdbcType=CHAR}
+      </if>
+    </where>
+
+    ORDER by update_date desc
+  </select>
+
+</mapper>

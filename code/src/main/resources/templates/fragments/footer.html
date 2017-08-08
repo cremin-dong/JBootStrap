@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<footer class="main-footer" th:fragment="footer">
+	<div class="pull-right hidden-xs">
+		<b>Version</b> 1.0.0
+	</div>
+	<strong>Copyright © 2017-<span th:text="${#dates.year(#dates.createNow())} "></span> Cremin</strong> All rights
+	reserved.
+</footer>
+
+</body>
+</html>
+
