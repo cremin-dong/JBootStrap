@@ -13,6 +13,7 @@
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
     <result column="photo" jdbcType="VARCHAR" property="photo" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
     <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />
     <result column="login_date" jdbcType="TIMESTAMP" property="loginDate" />
     <result column="login_flag" jdbcType="VARCHAR" property="loginFlag" />
@@ -24,7 +25,7 @@
     <result column="del_flag" jdbcType="CHAR" property="delFlag" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, company_id, office_id, username, password, no, name, email, phone, mobile, photo, 
+    id, company_id, office_id, username, password, no, name, email, phone, mobile, photo,sex,
     login_ip, login_date, login_flag, remarks, create_by, create_date, update_by, update_date, 
     del_flag
   </sql>
@@ -42,14 +43,14 @@
     insert into sys_user (id, company_id, office_id, 
       username, password, no, 
       name, email, phone, 
-      mobile, photo, login_ip, 
+      mobile, photo,sex, login_ip,
       login_date, login_flag, remarks, 
       create_by, create_date, update_by, 
       update_date, del_flag)
     values (#{id,jdbcType=VARCHAR}, #{companyId,jdbcType=VARCHAR}, #{officeId,jdbcType=VARCHAR}, 
       #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{no,jdbcType=VARCHAR}, 
       #{name,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{mobile,jdbcType=VARCHAR}, #{photo,jdbcType=VARCHAR}, #{loginIp,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=VARCHAR}, #{photo,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{loginIp,jdbcType=VARCHAR},
       #{loginDate,jdbcType=TIMESTAMP}, #{loginFlag,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
       #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
       #{updateDate,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=CHAR})
@@ -89,6 +90,9 @@
       </if>
       <if test="photo != null">
         photo,
+      </if>
+      <if test="sex != null">
+        sex,
       </if>
       <if test="loginIp != null">
         login_ip,
@@ -152,6 +156,9 @@
       <if test="photo != null">
         #{photo,jdbcType=VARCHAR},
       </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
       <if test="loginIp != null">
         #{loginIp,jdbcType=VARCHAR},
       </if>
@@ -214,6 +221,9 @@
       <if test="photo != null">
         photo = #{photo,jdbcType=VARCHAR},
       </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
       <if test="loginIp != null">
         login_ip = #{loginIp,jdbcType=VARCHAR},
       </if>
@@ -246,31 +256,24 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.dmm.module.domain.User">
     update sys_user
-    set company_id = #{companyId,jdbcType=VARCHAR},
-      office_id = #{officeId,jdbcType=VARCHAR},
+    set
       username = #{username,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
       no = #{no,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=VARCHAR},
       photo = #{photo,jdbcType=VARCHAR},
-      login_ip = #{loginIp,jdbcType=VARCHAR},
-      login_date = #{loginDate,jdbcType=TIMESTAMP},
-      login_flag = #{loginFlag,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
       remarks = #{remarks,jdbcType=VARCHAR},
-      create_by = #{createBy,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
-      update_date = #{updateDate,jdbcType=TIMESTAMP},
-      del_flag = #{delFlag,jdbcType=CHAR}
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
 
   <!-- 这里写入自定义接口 -->
-  <select id="selectBySelective" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectBySelective"  parameterType="com.dmm.module.domain.User" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from sys_user
@@ -305,6 +308,9 @@
       <if test="photo != null">
         AND photo = #{photo,jdbcType=VARCHAR}
       </if>
+      <if test="sex != null">
+        AND sex = #{sex,jdbcType=VARCHAR}
+      </if>
       <if test="loginIp != null">
         AND login_ip = #{loginIp,jdbcType=VARCHAR}
       </if>
@@ -332,6 +338,82 @@
       <if test="delFlag != null">
         AND del_flag = #{delFlag,jdbcType=CHAR}
       </if>
+    </where>
+
+    ORDER by update_date desc
+  </select>
+
+
+  <select id="selectByMap"   parameterType="Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    <where>
+      <if test="companyId != null">
+        AND company_id = #{companyId,jdbcType=VARCHAR}
+      </if>
+      <if test="officeId != null">
+        AND office_id = #{officeId,jdbcType=VARCHAR}
+      </if>
+      <if test="username != null">
+        AND username = #{username,jdbcType=VARCHAR}
+      </if>
+      <if test="password != null">
+        AND password = #{password,jdbcType=VARCHAR}
+      </if>
+      <if test="no != null">
+        AND no = #{no,jdbcType=VARCHAR}
+      </if>
+      <if test="name != null">
+        AND name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="email != null">
+        AND email = #{email,jdbcType=VARCHAR}
+      </if>
+      <if test="phone != null">
+        AND phone = #{phone,jdbcType=VARCHAR}
+      </if>
+      <if test="mobile != null">
+        AND mobile = #{mobile,jdbcType=VARCHAR}
+      </if>
+      <if test="photo != null">
+        AND photo = #{photo,jdbcType=VARCHAR}
+      </if>
+      <if test="sex != null">
+        AND sex = #{sex,jdbcType=VARCHAR}
+      </if>
+      <if test="loginIp != null">
+        AND login_ip = #{loginIp,jdbcType=VARCHAR}
+      </if>
+      <if test="loginDate != null">
+        AND login_date = #{loginDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="loginFlag != null">
+        AND login_flag = #{loginFlag,jdbcType=VARCHAR}
+      </if>
+      <if test="remarks != null">
+        AND remarks = #{remarks,jdbcType=VARCHAR}
+      </if>
+      <if test="createBy != null">
+        AND create_by = #{createBy,jdbcType=VARCHAR}
+      </if>
+      <if test="createDate != null">
+        AND create_date = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateBy != null">
+        AND update_by = #{updateBy,jdbcType=VARCHAR}
+      </if>
+      <if test="updateDate != null">
+        AND update_date = #{updateDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="delFlag != null">
+        AND del_flag = #{delFlag,jdbcType=CHAR}
+      </if>
+
+      <if test="usernameLike != null">
+        AND username like CONCAT('%',#{usernameLike},'%')
+      </if>
+
     </where>
 
     ORDER by update_date desc

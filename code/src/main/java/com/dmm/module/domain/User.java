@@ -1,25 +1,37 @@
 package com.dmm.module.domain;
 
 import com.dmm.common.core.BaseDomain;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class User extends BaseDomain {
 
+
+    public static  final String DEFAULT_PASSWORD = "11111111";
+
     private String companyId;
 
     private String officeId;
 
+    @NotEmpty(message="用户名不能为空")
     private String username;
 
     private String password;
 
+    @NotEmpty(message="工号不能为空")
     private String no;
 
     private String name;
 
+    @Email(message="邮件格式错误")
     private String email;
 
     private String phone;
@@ -27,6 +39,8 @@ public class User extends BaseDomain {
     private String mobile;
 
     private String photo;
+
+    private String sex;
 
     private String loginIp;
 
@@ -119,6 +133,14 @@ public class User extends BaseDomain {
         this.photo = photo == null ? null : photo.trim();
     }
 
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
     public String getLoginIp() {
         return loginIp;
     }
@@ -182,6 +204,7 @@ public class User extends BaseDomain {
         sb.append(", phone=").append(phone);
         sb.append(", mobile=").append(mobile);
         sb.append(", photo=").append(photo);
+        sb.append(", sex=").append(sex);
         sb.append(", loginIp=").append(loginIp);
         sb.append(", loginDate=").append(loginDate);
         sb.append(", loginFlag=").append(loginFlag);

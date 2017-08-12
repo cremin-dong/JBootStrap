@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"  layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <div class="content-wrapper">
+
+        <section class="content-header">
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 系统管理</a></li>
+                <li><a th:href="@{/users/list}">用户管理</a></li>
+                <li class="active">用户添加</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- Info boxes -->
+            <div class=" row">
+                <form id="editForm"  role="form">
+
+                    <input name="id"  th:value="${user.id}" type="hidden" id="id">
+
+                    <!-- text input -->
+                    <div class="form-group col-md-6">
+                        <label>用户名</label>
+                        <input th:field="${user.username}" type="text" name="username" class="form-control" placeholder="用户名"  data-rule-required="true">
+                        <input th:value="${user.username}"  type="hidden"  id="usernameOldValue">
+                    </div>
+
+                    <!-- text input -->
+                    <div class="form-group col-md-6">
+                        <label>工号</label>
+                        <input th:field="${user.no}"  type="text" name="no" class="form-control" placeholder="工号" maxlength="8" data-rule-required="true">
+                        <input th:value="${user.no}"  type="hidden"  id="noOldValue">
+                    </div>
+
+
+                    <!-- text input -->
+                    <div class="form-group col-md-6">
+                        <label>手机</label>
+                        <input th:field="${user.mobile}"  type="text" name="mobile" class="form-control" placeholder="手机"  data-rule-required="true"  minlength="11" maxlength="11" data-rule-isMobile="true">
+                    </div>
+
+                    <!-- text input -->
+                    <div class="form-group col-md-6">
+                        <label>真实姓名</label>
+                        <input th:field="${user.name}"  type="text" name="name" class="form-control" placeholder="真实姓名">
+                    </div>
+
+                    <!-- text input -->
+                    <div class="form-group col-md-6">
+                        <label>邮箱</label>
+                        <input th:field="${user.email}"  type="text" name="email" class="form-control" placeholder="邮箱"  data-rule-email="true">
+                    </div>
+
+                    <!-- text input -->
+                    <div class="form-group col-md-6">
+                        <label>电话</label>
+                        <input th:field="${user.phone}"  type="text" name="phone" class="form-control" placeholder="电话">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>性别</label>
+
+                        <div style="width: 100%">
+                            <label class="radio-inline">
+                                <input  th:field="*{user.sex}" type="radio" value="m" name="sex" required data-msg-required="性别必选">
+                                男性
+                            </label>
+                            <label class="radio-inline">
+                                <input  th:field="*{user.sex}" type="radio" value="f" name="sex">
+                                女性
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- text input -->
+                    <div class="form-group col-md-12">
+                        <label>备注信息</label>
+                        <textarea th:field="*{user.remarks}" name="remarks" class="form-control" maxlength="250"></textarea>
+
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2 pull-right">
+                    <button type="button" class="btn btn-block btn-primary btn-flat btn-save">保存</button>
+                </div>
+                <div class="col-md-2 pull-right">
+                    <a th:href="@{/users/list}" type="button" class="btn btn-block btn-default btn-flat">返回</a>
+                </div>
+            </div>
+
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+
+        <script th:src="${urls.getForLookupPath('/js/pages/user/user_form.js')}"></script>
+    </div>
+</div>
+
+</body>
+</html>

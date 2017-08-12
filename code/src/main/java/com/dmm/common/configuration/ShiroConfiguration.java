@@ -11,18 +11,23 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.stereotype.Component;
 
 /**
  * shiro 配置.
  */
 
 @Configuration
+@Component
 public class ShiroConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShiroConfiguration.class);
@@ -97,12 +102,13 @@ public class ShiroConfiguration {
         Map<String, String> filterChainDefinitionMapping = new LinkedHashMap<>();
 
         filterChainDefinitionMapping.put("/", "authc");
-        filterChainDefinitionMapping.put("/login", "authc");
+        filterChainDefinitionMapping.put("/login", "anon");
         filterChainDefinitionMapping.put("/logout", "logout");
         filterChainDefinitionMapping.put("/css/**", "anon");
         filterChainDefinitionMapping.put("/js/**", "anon");
         filterChainDefinitionMapping.put("/img/**", "anon");
         filterChainDefinitionMapping.put("/plugins/**", "anon");
+        filterChainDefinitionMapping.put("/**", "authc");
 
         shiroFilter.setFilterChainDefinitionMap(filterChainDefinitionMapping);
 

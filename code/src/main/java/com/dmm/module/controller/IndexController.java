@@ -1,12 +1,18 @@
 package com.dmm.module.controller;
 
+import com.dmm.common.core.GlobalConstant;
+import com.dmm.module.domain.User;
+import com.dmm.module.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +30,10 @@ public class IndexController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
 
+    @Autowired
+    UserService userService;
+
+
     @RequestMapping(value = "/login",method= RequestMethod.GET)
     public String welcome(Model model){
         return "login";
@@ -37,6 +47,11 @@ public class IndexController {
 
         //获取当前的Subject
         Subject currentUser = SecurityUtils.getSubject();
+
+        if(currentUser.isAuthenticated()||currentUser.isRemembered()){
+            return "redirect:/";
+        }
+
 
         try {
             //在调用了login方法后,SecurityManager会收到AuthenticationToken,并将其发送给已配置的Realm执行必须的认证检查
@@ -57,6 +72,11 @@ public class IndexController {
         }
         //验证是否登录成功
         if(currentUser.isAuthenticated()){
+
+            Session session = currentUser.getSession();
+            User user = userService.selectByUserName(username);
+            session.setAttribute(GlobalConstant.CURR_USER_SESSION_KEY,user);
+
             return "redirect:/";
         }else{
             token.clear();
@@ -80,8 +100,10 @@ public class IndexController {
     public Map<String,Object> logout(){
         Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
         try {
-            //退出
-            SecurityUtils.getSubject().logout();
+            Subject subject = SecurityUtils.getSubject();
+            subject.getSession().setAttribute(GlobalConstant.CURR_USER_SESSION_KEY,null);
+
+            subject.logout();
         } catch (Exception e) {
             LOGGER.error("退出异常",e);
         }

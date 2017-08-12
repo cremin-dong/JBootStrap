@@ -94,9 +94,8 @@
         $(link).trigger(clickEvent, [opts])
 
         if (!clickEvent.isDefaultPrevented()) {
-            event.preventDefault()
             pjax(opts)
-
+            event.preventDefault()
             $(link).trigger('pjax:clicked', [opts])
         }
     }
@@ -120,14 +119,15 @@
         options = optionsFor(container, options)
 
         var form = event.currentTarget
+        var $form = $(form)
 
         if (form.tagName.toUpperCase() !== 'FORM')
             throw "$.pjax.submit requires a form element"
 
         var defaults = {
-            type: form.method.toUpperCase(),
-            url: form.action,
-            container: $(form).attr('data-pjax'),
+            type: ($form.attr('method') || 'GET').toUpperCase(),
+            url: $form.attr('action'),
+            container: $form.attr('data-pjax'),
             target: form
         }
 
@@ -188,11 +188,11 @@
         // confuse the two.
         if (!options.data) options.data = {}
         if ($.isArray(options.data)) {
-            options.data.push({name: '_pjax', value: context.selector})
+            options.data.push({ name: '_pjax', value: context.selector })
         } else {
             options.data._pjax = context.selector
         }
-
+        //
         function fire(type, args, props) {
             if (!props) props = {}
             props.relatedTarget = target
@@ -422,7 +422,6 @@
 // You probably shouldn't use pjax on pages with other pushState
 // stuff yet.
     function onPjaxPopstate(event) {
-
         // Hitting back or forward should override any pending PJAX request.
         if (!initialPop) {
             abortXHR(pjax.xhr)
@@ -446,10 +445,11 @@
                 // Since state IDs always increase, we can deduce the navigation direction
                 direction = previousState.id < state.id ? 'forward' : 'back'
             }
-
+            //changed by jackchain cancel cache;
             var cache = cacheMapping[state.id] || []
+            //console.log(cache);
             var container = $(cache[0] || state.container), contents = cache[1]
-
+            //console.log(container);
             if (container.length) {
                 if (previousState) {
                     // Cache current container before replacement and inform the
@@ -742,8 +742,12 @@
             obj.contents.find('title').remove()
 
             // Gather all script[src] elements
-            obj.scripts = findAll(obj.contents, 'script[src]').remove()
-            obj.contents = obj.contents.not(obj.scripts)
+            //console.log(obj.contents);
+            //obj.scripts = findAll(obj.contents, 'script[src]').remove()
+            //console.log(obj.contents);
+            //console.log(obj.scripts);
+            //obj.contents = obj.contents.not(obj.scripts)
+            //console.log(obj.contents);
         }
 
         // Trim any whitespace off the title
@@ -764,9 +768,8 @@
         if (!scripts) return
 
         var existingScripts = $('script[src]')
-
         scripts.each(function() {
-            var src = this.src
+            var src = this.src;
             var matchedScripts = existingScripts.filter(function() {
                 return this.src === src
             })
@@ -879,7 +882,8 @@
             type: 'GET',
             dataType: 'html',
             scrollTo: 0,
-            maxCacheLength: 20,
+            maxCacheLength: 0,
+            cache:false,//changed by jackchain fire IE cache bug
             version: findVersion
         }
         $(window).on('popstate.pjax', onPjaxPopstate)
