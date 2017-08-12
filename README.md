@@ -23,12 +23,20 @@ JBootStrap
 ## 前端技术   
 * js框架：jQuery   
 * css框架：bootstrap   
+* 页面局部刷新：Pjax    
 * 验证框架：jQuery Validation   
 * 文件上传：jQuery-File-Upload   
-* 页面局部刷新：Pjax   
 * 进度条插件：nprogress   
-* font awesome   
-* AdminLTE   
+* 图标字体库：font awesome   
+* 表格插件：dataTables    
+* 日历插件：FullCalendar   
+* 双日历插件：daterangepicker   
+* 富文本编辑器： CKeditor  
+* 表格插件：dataTables 
+* 输入内容格式限制插件：inputmask   
+* 范围滑块：Ion.Range Slider   
+* 日期处理类库：Moment.js   
+* 下拉列表：Select2    
 
 ## 项目核心模块   
 * 用户管理（开发中...）   
