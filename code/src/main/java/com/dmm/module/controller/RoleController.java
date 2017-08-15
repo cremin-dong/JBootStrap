@@ -5,15 +5,13 @@ import com.dmm.common.core.DataTablesPager;
 import com.dmm.common.core.ResponseCodeEnum;
 import com.dmm.common.utils.PageUtils;
 import com.dmm.common.utils.UserUtils;
+import com.dmm.module.domain.Role;
 import com.dmm.module.domain.User;
+import com.dmm.module.service.RoleService;
 import com.dmm.module.service.UserService;
 import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.crypto.hash.SimpleHash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,20 +27,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 用户控制器Mode
+ * 角色控制器Mode
  */
 @Controller
-@RequestMapping("/users")
-public class UserController {
+@RequestMapping("/roles")
+public class RoleController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RoleController.class);
 
     @Autowired
-    UserService userService;
+    RoleService roleService;
 
     @RequestMapping(value = {"list", ""},method = RequestMethod.GET)
     public String list(Model model){
-        return "user/user_list";
+        return "role/role_list";
     }
 
     @RequestMapping(value = {"pagerData", ""},method = RequestMethod.GET)
@@ -54,28 +52,23 @@ public class UserController {
 
         //组装查询参数
         Map<String,Object> params = new HashMap<>();
-        params.put("delFlag",User.DEL_FLAG_NO);
+        params.put("delFlag",Role.DEL_FLAG_NO);
 
-        String usernameLike = request.getParameter("usernameLike");
-        String no = request.getParameter("no");
+        String searchText = request.getParameter("searchText");
 
-        if(StringUtils.isNotBlank(usernameLike)){
-            params.put("usernameLike",usernameLike);
-        }
-
-        if(StringUtils.isNotBlank(no)){
-            params.put("no",no);
+        if(StringUtils.isNotBlank(searchText)){
+            params.put("searchText",searchText);
         }
 
 
         //获取查询数据
-        Page<List<User>> listPage = pagerParams.doSelectPage(()
-                -> userService.selectByMap(params));
+        Page<List<Role>> listPage = pagerParams.doSelectPage(() -> roleService.selectByMap(params));
 
         //转换为DataTables数据
         DataTablesPager dataTablesPager = PageUtils.pageHelperToDataTablesPager(listPage, request);
 
         return dataTablesPager;
+
     }
 
 
@@ -83,46 +76,47 @@ public class UserController {
     public String add(HttpServletRequest request,Model model){
 
         String id = request.getParameter("id");
-        User user = new User();
+        Role role = new Role();
 
         //编辑
         if(StringUtils.isNotBlank(id)){
-            user = userService.selectByPrimaryKey(id);
+           role = roleService.selectByPrimaryKey(id);
         }
 
-        model.addAttribute("user",user);
+        model.addAttribute("role",role);
 
-        return "user/user_form";
+        return "role/role_form";
     }
+
 
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
-    public  BackResult<String> save(@Validated User user){
+    public  BackResult<String> save(@Validated Role role){
 
         BackResult<String> backResult = new BackResult<>();
 
         try{
 
-            String id = user.getId();
+            String id = role.getId();
 
             if(StringUtils.isNotBlank(id)){ //编辑
 
-                user.setUpdateBy(UserUtils.getCurrUserId());
-                user.setUpdateDate(new Date());
-                userService.updateByPrimaryKey(user);
+                role.setUpdateBy(UserUtils.getCurrUserId());
+                role.setUpdateDate(new Date());
+                roleService.updateByPrimaryKey(role);
 
             }else{ //新增
-                user.setPassword(UserUtils.getUserDefaultPassword(user.getUsername()));
-                user.setCreateBy(UserUtils.getCurrUserId());
-                user.preInsert();
-                userService.insert(user);
+                role.setCreateBy(UserUtils.getCurrUserId());
+                role.setIsSys(Role.IS_SYS_FLASE);
+                role.preInsert();
+                roleService.insert(role);
             }
 
             backResult.setCode(ResponseCodeEnum.BACK_CODE_SUCCESS.value);
 
         }catch (Exception ex){
 
-            LOGGER.error("保存员工信息异常",ex);
+            LOGGER.error("保存角色信息异常",ex);
             backResult.setCode(ResponseCodeEnum.BACK_CODE_FAIL.value);
         }
 
@@ -138,15 +132,15 @@ public class UserController {
 
         try{
 
-            User user = new User();
-            user.setId(id);
-            user.setDelFlag(User.DEL_FLAG_YES);
-            userService.updateByPrimaryKeySelective(user);
+            Role role = new Role();
+            role.setId(id);
+            role.setDelFlag(User.DEL_FLAG_YES);
+            roleService.updateByPrimaryKeySelective(role);
             backResult.setCode(ResponseCodeEnum.BACK_CODE_SUCCESS.value);
 
         }catch (Exception ex){
 
-            LOGGER.error("删除员工信息异常",ex);
+            LOGGER.error("删除角色信息异常",ex);
             backResult.setCode(ResponseCodeEnum.BACK_CODE_FAIL.value);
         }
 
@@ -154,60 +148,64 @@ public class UserController {
 
     }
 
-    @RequestMapping(value = "/usernameOnlyCheck",method = RequestMethod.GET)
+    @RequestMapping(value = "/nameOnlyCheck",method = RequestMethod.GET)
     @ResponseBody
-    public boolean usernameOnlyCheck(@RequestParam("username")String username,@RequestParam("oldUsername")String oldUsername){
+    public boolean noOnlyCheck(@RequestParam("name")String name,@RequestParam("oldName")String oldName){
 
 
         try{
 
-            if(StringUtils.isNotBlank(username)){
+            if(StringUtils.isNotBlank(name)){
 
-                if(StringUtils.isNotBlank(oldUsername) && username.equals(oldUsername)){
+                if(StringUtils.isNotBlank(oldName) && name.equals(oldName)){
                     return  true;
                 }
 
+                Role role = new Role();
+                role.setName(name);
 
-                User user = userService.selectByUserName(username);
+                List<Role> roles = roleService.selectBySelective(role);
 
-                if(user != null){
-                    return  false;
-                }
-            }
-
-        }catch (Exception ex){
-            LOGGER.error("验证用户名唯一性异常",ex);
-        }
-
-        return true;
-
-    }
-
-    @RequestMapping(value = "/noOnlyCheck",method = RequestMethod.GET)
-    @ResponseBody
-    public boolean noOnlyCheck(@RequestParam("no")String no,@RequestParam("oldNo")String oldNo){
-
-        try{
-
-            if(StringUtils.isNotBlank(no)){
-
-                if(StringUtils.isNotBlank(oldNo) && no.equals(oldNo)){
-                    return  true;
-                }
-
-                User user = new User();
-                user.setNo(no);
-
-                List<User> users = userService.selectBySelective(user);
-
-                if(CollectionUtils.isNotEmpty(users)){
+                if(CollectionUtils.isNotEmpty(roles)){
                     return false;
                 }
             }
 
 
         }catch (Exception ex){
-            LOGGER.error("验证用户名唯一性异常",ex);
+            LOGGER.error("验证名称唯一性异常",ex);
+        }
+
+        return true;
+
+    }
+
+    @RequestMapping(value = "/descriptionOnlyCheck",method = RequestMethod.GET)
+    @ResponseBody
+    public boolean descriptionOnlyCheck(@RequestParam("description")String description,@RequestParam("oldDescription")String oldDescription){
+
+
+        try{
+
+            if(StringUtils.isNotBlank(description)){
+
+                if(StringUtils.isNotBlank(oldDescription) && description.equals(oldDescription)){
+                    return  true;
+                }
+
+                Role role = new Role();
+                role.setDescription(description);
+
+                List<Role> roles = roleService.selectBySelective(role);
+
+                if(CollectionUtils.isNotEmpty(roles)){
+                    return false;
+                }
+            }
+
+
+        }catch (Exception ex){
+            LOGGER.error("验证描述唯一性异常",ex);
         }
 
         return true;

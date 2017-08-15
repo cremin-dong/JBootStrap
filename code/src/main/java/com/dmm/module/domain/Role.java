@@ -1,11 +1,23 @@
 package com.dmm.module.domain;
 
 import com.dmm.common.core.BaseDomain;
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class Role extends BaseDomain {
 
+
+    /** 系统内置 **/
+    public static String IS_SYS_TRUE = "1";
+
+    /** 非系统内置 **/
+    public static String IS_SYS_FLASE = "0";
+
+
+
+    @NotEmpty(message="角色名称不能为空")
     private String name;
 
+    @NotEmpty(message="角色描述不能为空")
     private String description;
 
     private String isSys;

@@ -141,12 +141,9 @@
     set name = #{name,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR},
       is_sys = #{isSys,jdbcType=CHAR},
-      create_by = #{createBy,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
       update_date = #{updateDate,jdbcType=TIMESTAMP},
-      remarks = #{remarks,jdbcType=VARCHAR},
-      del_flag = #{delFlag,jdbcType=CHAR}
+      remarks = #{remarks,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
@@ -162,6 +159,70 @@
     WHERE
       ur.role_id = r.id
         and ur.user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="selectBySelective"  parameterType="com.dmm.module.domain.Role" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from acl_role
+    <where>
+      <if test="name != null">
+        AND name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="description != null">
+        AND description = #{description,jdbcType=VARCHAR}
+      </if>
+      <if test="isSys != null">
+        AND is_sys = #{isSys,jdbcType=CHAR}
+      </if>
+      <if test="createBy != null">
+        AND create_by = #{createBy,jdbcType=VARCHAR}
+      </if>
+      <if test="updateBy != null">
+        AND  update_by = #{updateBy,jdbcType=VARCHAR}
+      </if>
+      <if test="delFlag != null">
+        AND  del_flag = #{delFlag,jdbcType=CHAR}
+      </if>
+    </where>
+
+    ORDER by update_date desc
+  </select>
+
+
+  <select id="selectByMap"   parameterType="Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from acl_role
+    <where>
+      <if test="name != null">
+        AND name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="description != null">
+        AND description = #{description,jdbcType=VARCHAR}
+      </if>
+      <if test="isSys != null">
+        AND is_sys = #{isSys,jdbcType=CHAR}
+      </if>
+      <if test="createBy != null">
+        AND create_by = #{createBy,jdbcType=VARCHAR}
+      </if>
+      <if test="updateBy != null">
+        AND  update_by = #{updateBy,jdbcType=VARCHAR}
+      </if>
+      <if test="delFlag != null">
+        AND  del_flag = #{delFlag,jdbcType=CHAR}
+      </if>
+      <if test="searchText != null">
+        AND (
+             name like CONCAT('%',#{searchText},'%')
+             OR  description like CONCAT('%',#{searchText},'%')
+        )
+      </if>
+    </where>
+
+    ORDER by update_date desc
   </select>
 
 </mapper>

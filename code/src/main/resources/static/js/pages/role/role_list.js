@@ -1,4 +1,4 @@
-jbootstrap.userList = (function (jbootstrap, window, $) {
+jbootstrap.roleList = (function (jbootstrap, window, $) {
 
 
     var table;
@@ -9,7 +9,6 @@ jbootstrap.userList = (function (jbootstrap, window, $) {
 
         initPageOperate();
 
-        //initCheckAll();
     };
 
 
@@ -18,10 +17,10 @@ jbootstrap.userList = (function (jbootstrap, window, $) {
      */
     function initTableData() {
 
-        table = $('#tab-userlist').DataTable({
+        table = $('#tab-rolelist').DataTable({
             ajax: {
                 //指定数据源
-                url: baseContextPath + "users/pagerData",
+                url: baseContextPath + "roles/pagerData",
                 dataSrc: "data",
                 data: function (d) {
                     var param = {};
@@ -49,28 +48,17 @@ jbootstrap.userList = (function (jbootstrap, window, $) {
                 }, {
                     "data": null //此列不绑定数据源，用来显示序号
                 }, {
-                    "data": "photo",
-                    "render": function (data, type, row, meta) {
-
-                        var img = row.photo;
-                        if (!img) {
-                            img = baseContextPath + "/" + "img/user2-160x160.jpg";
-                        }
-                        //渲染 把数据源中的标题和url组成超链接
-                        return '<img width="20" onerror="jbootstrap.userList.imgOnerror(this)" src="' + img + '">';
-                    }
-                }, {
-                    "data": "username"
-                }, {
-                    "data": "no"
-                }, {
                     "data": "name"
                 }, {
-                    "data": "email"
+                    "data": "description"
+                },{
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+
+                        return row.isSys == "1"?"是":"否";
+                    }
                 }, {
-                    "data": "phone"
-                }, {
-                    "data": "mobile"
+                    "data": "updateDate"
                 }, {
                     "data": null,
                     "render": function (data, type, row, meta) {
@@ -78,7 +66,11 @@ jbootstrap.userList = (function (jbootstrap, window, $) {
                         var source = $("#tpl").html();
                         var template = Handlebars.compile(source);
 
-                        var context = {id: row.id, editUrl: baseContextPath + "users/form?id=" + row.id};
+                        var context = {
+                            id: row.id,
+                            show: row.isSys == "1" ? false :true,
+                            editUrl: baseContextPath + "roles/form?id=" + row.id
+                        };
                         var html = template(context);
 
                         return html;
@@ -88,13 +80,7 @@ jbootstrap.userList = (function (jbootstrap, window, $) {
                 {
                     "visible": false,
                     "targets": 0
-                }
-                /*, {
-                    "visible": false,
-                    "targets": 1
-                    "defaultContent": "<input type='checkbox' name='checkList'>"
-                }*/
-                ]
+                }]
 
         });
 
@@ -118,34 +104,6 @@ jbootstrap.userList = (function (jbootstrap, window, $) {
     }
 
 
-    /**
-     * 设置全选
-     */
-    function initCheckAll() {
-
-        table.on("change", ":checkbox", function () {
-
-            if ($(this).is("#checkAll")) {
-                //全选
-                $("#tab-userlist_wrapper :checkbox[name=checkList]").prop("checked", $(this).prop("checked"));
-            } else {
-                //一般复选
-                var checkbox = $("#tab-userlist_wrapper :checkbox[name=checkList]");
-                $("#tab-userlist_wrapper #checkAll").prop('checked', checkbox.length == checkbox.filter(':checked').length);
-            }
-        })
-
-    }
-
-    /**
-     * 设置默认头像
-     * @param img
-     */
-    var imgOnerrorFunc = function (img) {
-        img.src = baseContextPath + "/" + "img/user2-160x160.jpg";
-        img.onerror = null;//控制不要一直跳动
-    }
-
 
     /**
      * 删除
@@ -164,7 +122,7 @@ jbootstrap.userList = (function (jbootstrap, window, $) {
         }, function () {
 
             $.ajax({
-                url: baseContextPath + 'users/del/' + id,
+                url: baseContextPath + 'roles/del/' + id,
                 type: 'get',
                 success: function (msg) {
                     if (msg.code === "6000") {
@@ -198,9 +156,8 @@ jbootstrap.userList = (function (jbootstrap, window, $) {
 
     return {
         ready: readyFunc,
-        imgOnerror: imgOnerrorFunc,
         delRow: delRowFunc,
     };
 })(jbootstrap, window, jQuery);
 
-jbootstrap.userList.ready();
+jbootstrap.roleList.ready();

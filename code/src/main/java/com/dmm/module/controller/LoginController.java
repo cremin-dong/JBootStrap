@@ -9,14 +9,12 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,10 +23,10 @@ import java.util.Map;
  * Created by cremin on 2017/7/31.
  */
 @Controller
-public class IndexController {
+public class LoginController {
 
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     UserService userService;
@@ -40,7 +38,7 @@ public class IndexController {
     }
 
     @RequestMapping(value="/login",method= RequestMethod.POST)
-    public String login(@RequestParam("username") String username, @RequestParam("password") String password, RedirectAttributes redirectAttributes){
+    public String login(@RequestParam("username") String username, @RequestParam("password") String password, Model model){
 
 
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
@@ -60,15 +58,15 @@ public class IndexController {
             currentUser.login(token);
 
         }catch(UnknownAccountException uae){
-            redirectAttributes.addFlashAttribute("message", "未知账户");
+            model.addAttribute("message", "未知账户");
         }catch(IncorrectCredentialsException ice){
-            redirectAttributes.addFlashAttribute("message", "密码不正确");
+            model.addAttribute("message", "密码不正确");
         }catch(LockedAccountException lae){
-            redirectAttributes.addFlashAttribute("message", "账户已锁定");
+            model.addAttribute("message", "账户已锁定");
         }catch(ExcessiveAttemptsException eae){
-            redirectAttributes.addFlashAttribute("message", "用户名或密码错误次数过多");
+            model.addAttribute("message", "用户名或密码错误次数过多");
         }catch(AuthenticationException ae){
-            redirectAttributes.addFlashAttribute("message", "用户名或密码不正确");
+            model.addAttribute("message", "用户名或密码不正确");
         }
         //验证是否登录成功
         if(currentUser.isAuthenticated()){
@@ -80,7 +78,7 @@ public class IndexController {
             return "redirect:/";
         }else{
             token.clear();
-            return "redirect:/login";
+            return "login";
         }
     }
 

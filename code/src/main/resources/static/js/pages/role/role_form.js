@@ -21,7 +21,7 @@ jbootstrap.userAdd = (function (jbootstrap, window, $) {
 
             $.ajax({
                 type: "POST",
-                url: baseContextPath + "users/save",
+                url: baseContextPath + "roles/save",
                 data:$("#editForm").serialize(),
                 async: false,
                 success: function(data) {
@@ -36,7 +36,7 @@ jbootstrap.userAdd = (function (jbootstrap, window, $) {
 
 
                         $.pjax({
-                            url: baseContextPath + "users/list",
+                            url: baseContextPath + "roles/list",
                             container: '#pjax-container'
                         });
 
@@ -66,42 +66,43 @@ jbootstrap.userAdd = (function (jbootstrap, window, $) {
 
         $("#editForm").validate({
             rules: {
-                username: {
+                name: {
                     remote: {
-                        url: baseContextPath + "users/usernameOnlyCheck",
+                        url: baseContextPath + "roles/nameOnlyCheck",
                         type: "get",
                         dataType: 'json',
                         data: {
-                            'username': function () {
-                                return $('input[name="username"]').val();
+                            'name': function () {
+                                return $('input[name="name"]').val();
                             },
-                            'oldUsername':function () {
-                                return $('#usernameOldValue').val();
+                            'oldName': function () {
+                                return $('#nameOldValue').val();
                             }
                         }
-                    }
+                    },
                 },
-                no: {
+                description: {
                     remote: {
-                        url: baseContextPath + "users/noOnlyCheck",
+                        url: baseContextPath + "roles/descriptionOnlyCheck",
                         type: "get",
                         dataType: 'json',
                         data: {
-                            'no': function () {
-                                return $('input[name="no"]').val();
-                            },'oldNo': function () {
-                                return $('#noOldValue').val();
+                            'description': function () {
+                                return $('input[name="description"]').val();
+                            },
+                            'oldDescription': function () {
+                                return $('#descriptionOldValue').val();
                             }
                         }
                     }
                 }
             },
             messages: {
-                username: {
-                    remote: '用户名已存在'
+                name: {
+                    remote: '角色名称已经存在'
                 },
-                no: {
-                    remote: '工号已存在'
+                description: {
+                    remote: '中文名称已经存在'
                 },
             }
         });

@@ -19,11 +19,11 @@
     <result column="del_flag" jdbcType="CHAR" property="delFlag" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, parent_id, parent_ids, name, sort, href, icon, type, permission, create_by, create_date, 
+    id, parent_id, parent_ids, name, sort, href, icon, type, permission, create_by, create_date,
     update_by, update_date, remarks, del_flag
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from acl_resource
     where id = #{id,jdbcType=VARCHAR}
@@ -33,15 +33,15 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.dmm.module.domain.Resource">
-    insert into acl_resource (id, parent_id, parent_ids, 
-      name, sort, href, icon, 
-      type, permission, create_by, 
-      create_date, update_by, update_date, 
+    insert into acl_resource (id, parent_id, parent_ids,
+      name, sort, href, icon,
+      type, permission, create_by,
+      create_date, update_by, update_date,
       remarks, del_flag)
-    values (#{id,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{parentIds,jdbcType=VARCHAR}, 
-      #{name,jdbcType=VARCHAR}, #{sort,jdbcType=DECIMAL}, #{href,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, 
-      #{type,jdbcType=CHAR}, #{permission,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
-      #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{parentIds,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR}, #{sort,jdbcType=DECIMAL}, #{href,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR},
+      #{type,jdbcType=CHAR}, #{permission,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR},
+      #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP},
       #{remarks,jdbcType=VARCHAR}, #{delFlag,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.dmm.module.domain.Resource">

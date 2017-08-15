@@ -53,7 +53,7 @@ public class UserRealm extends AuthorizingRealm {
         final String username = usernamePasswordToken.getUsername();
 
         if (username == null) {
-            throw new UnknownAccountException("用户名不能为空");
+            throw new UnknownAccountException("未知账户");
         }
 
         final User user = userService.selectByUserName(username);

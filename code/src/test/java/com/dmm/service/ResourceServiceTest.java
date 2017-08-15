@@ -33,7 +33,7 @@ public class ResourceServiceTest {
         String parentId = "a91fc95f-7be8-4483-b504-2706ef8d9eec";
 
         Resource resource = new Resource();
-        resource.setHref("/users/delete");
+        resource.setHref("");
         resource.setIcon("fa fa-user");
         resource.setName("用户删除");
 
@@ -43,7 +43,7 @@ public class ResourceServiceTest {
             //设定父节点信息
             resource.setParentId(parentId);
             resource.setParentIds(parentResource.getParentIds() == null? parentId
-                    :String.join(parentResource.getParentIds(),",",parentId));
+                    :String.join(",",parentResource.getParentIds(),parentId));
         }
 
         resource.setPermission("sys:users:delete");

@@ -13,7 +13,7 @@ $(function () {
  */
 $.extend(true, $.fn.dataTable.defaults, {
     serverSide: true,//开启服务器模式,分页，取数据等等的都放到服务端去
-    processing: true,//载入数据的时候是否显示“载入中”
+    processing: true,//载入数据的时候是否显示"载入中"
     pageLength: 10,  //首次加载的数据条数
     ordering: false, //排序操作在服务端进行，所以可以关了。
     pagingType: "full_numbers",
@@ -53,6 +53,52 @@ jQuery.validator.addMethod("isMobile", function(value, element) {
     return this.optional(element) || (length == 11 && mobile.test(value));
 }, "请正确填写您的手机号码");
 
+// 字符验证
+jQuery.validator.addMethod("stringCheck", function(value, element) {
+    return this.optional(element) || /^[u0391-uFFE5w]+$/.test(value);
+}, "只能包括中文字、英文字母、数字和下划线");
+
+// 电话号码验证
+jQuery.validator.addMethod("isTel", function(value, element) {
+    var tel = /^d{3,4}-?d{7,9}$/;    //电话号码格式010-12345678
+    return this.optional(element) || (tel.test(value));
+}, "请正确填写您的电话号码");
+
+// 联系电话(手机/电话皆可)验证
+jQuery.validator.addMethod("isPhone", function(value,element) {
+    var length = value.length;
+    var mobile = /^(13[0-9]{9})|(18[0-9]{9})|(14[0-9]{9})|(17[0-9]{9})|(15[0-9]{9})$/;
+    var tel = /^d{3,4}-?d{7,9}$/;
+    return this.optional(element) || (tel.test(value) || mobile.test(value));
+}, "请正确填写您的联系电话");
+
+//身份证号码验证
+jQuery.validator.addMethod("idcardno", function(value, element){
+    return this.optional(element) || isIdCardNo(value);
+}, "请正确输入身份证号码");
+
+//字母数字
+jQuery.validator.addMethod("alnum", function(value, element){
+    return this.optional(element) ||/^[a-zA-Z0-9]+$/.test(value);
+}, "只能包括英文字母和数字");
+
+//字母
+jQuery.validator.addMethod("letter", function(value, element){
+    return this.optional(element) ||/^[a-zA-Z]+$/.test(value);
+}, "只能输入英文字母");
+
+
+// 邮政编码验证
+jQuery.validator.addMethod("zipcode", function(value, element){
+    var tel = /^[0-9]{6}$/;
+    return this.optional(element) || (tel.test(value));
+}, "请正确填写邮政编码");
+
+// 汉字
+jQuery.validator.addMethod("chcharacter", function(value, element){
+    var tel = /^[\u4E00-\u9FA5]+$/;
+    return this.optional(element) || (tel.test(value));
+}, "请输入汉字");
 
 /**
  * 验证错误默认设定

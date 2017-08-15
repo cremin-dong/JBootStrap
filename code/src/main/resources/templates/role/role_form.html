@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"  layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <div class="content-wrapper">
+
+        <section class="content-header">
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 系统管理</a></li>
+                <li><a th:href="@{/roles/list}">角色管理</a></li>
+                <li class="active">角色添加</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- Info boxes -->
+            <div class=" row">
+                <form id="editForm"  role="form">
+
+                    <input name="id"  th:value="${role.id}" type="hidden" id="id">
+
+                    <!-- text input -->
+                    <div class="form-group col-md-12">
+                        <label>角色名称</label>
+                        <input th:field="${role.name}" type="text" name="name" class="form-control" placeholder="名称" maxlength="20"  data-rule-required="true" data-rule-letter="true">
+                        <input th:value="${role.name}"  type="hidden"  id="nameOldValue">
+                    </div>
+
+                    <!-- text input -->
+                    <div class="form-group col-md-12">
+                        <label>中文名称</label>
+                        <input th:field="${role.description}"  type="text" name="description" class="form-control" placeholder="描述" maxlength="100" data-rule-required="true" data-rule-chcharacter="true">
+                        <input th:value="${role.description}"  type="hidden"  id="descriptionOldValue">
+                    </div>
+
+                    <!-- text input -->
+                    <div class="form-group col-md-12">
+                        <label>备注信息</label>
+                        <textarea th:field="*{role.remarks}" name="remarks" class="form-control" maxlength="250"></textarea>
+
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2 pull-right">
+                    <button type="button" class="btn btn-block btn-primary btn-flat btn-save">保存</button>
+                </div>
+                <div class="col-md-2 pull-right">
+                    <a th:href="@{/roles/list}" type="button" class="btn btn-block btn-default btn-flat">返回</a>
+                </div>
+            </div>
+
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+
+        <script th:src="${urls.getForLookupPath('/js/pages/role/role_form.js')}"></script>
+    </div>
+</div>
+
+</body>
+</html>

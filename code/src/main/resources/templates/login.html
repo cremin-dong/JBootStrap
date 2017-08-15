@@ -15,26 +15,20 @@
     <!-- Theme style -->
     <style>
 
-        html,body{
+        html, body {
             height: 100%;
         }
 
-        .login-logo,
-        .register-logo {
-            font-size: 35px;
-            text-align: center;
-            font-weight: 300;
-        }
         .login-logo a,
         .register-logo a {
             color: #444;
         }
-        .login-page,
-        .register-page {
+
+        .login-page{
             background: #d2d6de;
         }
-        .login-box,
-        .register-box {
+
+        .login-box{
             width: 360px;
             position: absolute;
             left: 50%;
@@ -43,24 +37,29 @@
             margin-top: -160px;
         }
 
-        .login-box-body,
-        .register-box-body {
+        .login-box-body{
             background: #fff;
-            padding: 20px;
+            padding: 20px 20px 40px 20px;
             border-top: 0;
             color: #666;
-            height: 260px;
         }
+
         .login-box-body .form-control-feedback,
         .register-box-body .form-control-feedback {
             color: #777;
         }
-        .login-box-msg,
-        .register-box-msg {
+
+        .login-box-msg{
             margin: 0;
             text-align: center;
             padding: 10px 20px 20px 20px;
             font-size: 16px;
+        }
+
+        p.error{
+            font-size: 14px;
+            color: #dd4b39;
+            margin: 6px 0 0 0;
         }
 
     </style>
@@ -79,9 +78,9 @@
     <div class="login-box-body">
         <p class="login-box-msg">系统登录</p>
 
-        <form th:action="@{/login}" method="post">
+        <form id="loginForm" th:action="@{/login}" method="post" onsubmit="return validateLogin();">
             <div class="form-group has-feedback">
-                <input type="username" name="username" class="form-control" placeholder="用户名" value="admin">
+                <input type="text" name="username" class="form-control" placeholder="用户名" value="admin">
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
@@ -92,6 +91,7 @@
                 <!-- /.col -->
                 <div class="col-xs-12">
                     <button type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
+                    <p id="errorText" th:text="${message}" class="error text-align"></p>
                 </div>
                 <!-- /.col -->
             </div>
@@ -107,6 +107,41 @@
 <script th:src="@{/plugins/jquery/dist/jquery.min.js}"></script>
 <!-- Bootstrap 3.3.7 -->
 <script th:src="@{/plugins/bootstrap/dist/js/bootstrap.min.js}"></script>
+<!-- jquery validate-->
+<script th:src="@{/plugins/jquery-validation-1.17.0/dist/jquery.validate.min.js}"></script>
+<script th:src="@{/plugins/jquery-validation-1.17.0/dist/localization/messages_zh.js}"></script>
+
+<script>
+
+    $(document).ready(function () {
+        $("input[name=username]").focus();
+
+        $("input[name=username],input[name=password]").bind("change",function () {
+           $("#errorText").html("");
+        });
+
+        validateSetting();
+    });
+
+    function validateSetting() {
+
+        $("#loginForm").validate({
+            errorElement: "p",
+            rules: {
+                "username": {required: true},
+                "password": {required: true, minlength: 1}
+            },
+            messages: {
+                "username": {required: "请输入用户名"},
+                "password": {required: "请输入密码", minlength: "密码长度至少为1位"}
+            }
+        });
+    }
+
+    function validateLogin() {
+        return $("#loginForm").valid();
+    }
+</script>
 
 </body>
 </html>
