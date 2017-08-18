@@ -15,7 +15,14 @@ import java.util.List;
 public class User extends BaseDomain {
 
 
+    //默认密码
     public static  final String DEFAULT_PASSWORD = "11111111";
+
+    //性别：男
+    public static  final String SEX_MAN = "m";
+
+    //性别：女
+    public static  final String SEX_FALE = "f";
 
     private String companyId;
 

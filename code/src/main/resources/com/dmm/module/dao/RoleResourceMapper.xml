@@ -33,4 +33,18 @@
       </if>
     </trim>
   </insert>
+
+  <delete id="deleteByRoleId">
+    delete from acl_role_resource
+    where role_id = #{roleId,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="saveBatch" useGeneratedKeys="true" parameterType="java.util.List">
+    insert into acl_role_resource (role_id,resource_id)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.roleId},#{item.resourceId})
+    </foreach>
+  </insert>
+
 </mapper>

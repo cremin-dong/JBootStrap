@@ -199,12 +199,9 @@
       icon = #{icon,jdbcType=VARCHAR},
       type = #{type,jdbcType=CHAR},
       permission = #{permission,jdbcType=VARCHAR},
-      create_by = #{createBy,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
       update_date = #{updateDate,jdbcType=TIMESTAMP},
-      remarks = #{remarks,jdbcType=VARCHAR},
-      del_flag = #{delFlag,jdbcType=CHAR}
+      remarks = #{remarks,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
@@ -228,5 +225,77 @@
     and rr.resource_id = p.id
     and ur.user_id = #{userId,jdbcType=VARCHAR}
   </select>
+
+  <!-- 根据角色ID获取角色拥有的资源 -->
+  <select id="selectByRoleId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+        r.*
+    FROM
+        acl_role_resource rr
+    LEFT JOIN acl_resource r ON r.id = rr.resource_id
+    WHERE
+        rr.role_id = #{roleId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectBySelective"  parameterType="com.dmm.module.domain.Resource" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from acl_resource
+    <where>
+      <if test="parentId != null">
+        AND parent_id = #{parentId,jdbcType=VARCHAR}
+      </if>
+      <if test="parentIds != null">
+        AND parent_ids = #{parentIds,jdbcType=VARCHAR}
+      </if>
+      <if test="name != null">
+        AND name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="sort != null">
+        AND sort = #{sort,jdbcType=DECIMAL}
+      </if>
+      <if test="href != null">
+        AND href = #{href,jdbcType=VARCHAR}
+      </if>
+      <if test="icon != null">
+        AND icon = #{icon,jdbcType=VARCHAR}
+      </if>
+      <if test="type != null">
+        AND type = #{type,jdbcType=CHAR}
+      </if>
+      <if test="permission != null">
+        AND permission = #{permission,jdbcType=VARCHAR}
+      </if>
+      <if test="createBy != null">
+        AND create_by = #{createBy,jdbcType=VARCHAR}
+      </if>
+      <if test="createDate != null">
+        AND create_date = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateBy != null">
+        AND update_by = #{updateBy,jdbcType=VARCHAR}
+      </if>
+      <if test="updateDate != null">
+        AND update_date = #{updateDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="remarks != null">
+        AND remarks = #{remarks,jdbcType=VARCHAR}
+      </if>
+      <if test="delFlag != null">
+        AND del_flag = #{delFlag,jdbcType=CHAR}
+      </if>
+    </where>
+
+    ORDER by parent_ids,sort
+  </select>
+
+  <!-- 逻辑删除菜单及所有子菜单项 -->
+  <update id="delResourceAndChilds">
+     DELETE FROM acl_resource
+     WHERE
+        id = #{id,jdbcType=VARCHAR}
+     OR FIND_IN_SET(#{id,jdbcType=VARCHAR},parent_ids)
+  </update>
+
 
 </mapper>

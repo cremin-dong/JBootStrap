@@ -88,6 +88,10 @@ public class UserController {
         //编辑
         if(StringUtils.isNotBlank(id)){
             user = userService.selectByPrimaryKey(id);
+            model.addAttribute("isOperatorEdit",true);
+        }else{
+            user.setSex(User.SEX_MAN);
+            model.addAttribute("isOperatorEdit",false);
         }
 
         model.addAttribute("user",user);
@@ -167,12 +171,16 @@ public class UserController {
                     return  true;
                 }
 
+                User user = new User();
+                user.setUsername(username);
+                user.setDelFlag(User.DEL_FLAG_NO);
 
-                User user = userService.selectByUserName(username);
+                List<User> users = userService.selectBySelective(user);
 
-                if(user != null){
-                    return  false;
+                if(CollectionUtils.isNotEmpty(users)){
+                    return false;
                 }
+
             }
 
         }catch (Exception ex){
@@ -197,6 +205,7 @@ public class UserController {
 
                 User user = new User();
                 user.setNo(no);
+                user.setDelFlag(User.DEL_FLAG_NO);
 
                 List<User> users = userService.selectBySelective(user);
 

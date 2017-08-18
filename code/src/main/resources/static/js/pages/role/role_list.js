@@ -2,6 +2,7 @@ jbootstrap.roleList = (function (jbootstrap, window, $) {
 
 
     var table;
+    var zNodes = [];
 
     var readyFunc = function () {
 
@@ -9,6 +10,9 @@ jbootstrap.roleList = (function (jbootstrap, window, $) {
 
         initPageOperate();
 
+        initParentTree();
+
+        initControlStyle();
     };
 
 
@@ -51,11 +55,11 @@ jbootstrap.roleList = (function (jbootstrap, window, $) {
                     "data": "name"
                 }, {
                     "data": "description"
-                },{
+                }, {
                     "data": null,
                     "render": function (data, type, row, meta) {
 
-                        return row.isSys == "1"?"是":"否";
+                        return row.isSys == "1" ? "是" : "否";
                     }
                 }, {
                     "data": "updateDate"
@@ -67,9 +71,9 @@ jbootstrap.roleList = (function (jbootstrap, window, $) {
                         var template = Handlebars.compile(source);
 
                         var context = {
-                            id: row.id,
-                            show: row.isSys == "1" ? false :true,
-                            editUrl: baseContextPath + "roles/form?id=" + row.id
+                            show: row.isSys == "1" ? false : true,
+                            editUrl: baseContextPath + "roles/form?id=" + row.id,
+                            obj: row
                         };
                         var html = template(context);
 
@@ -103,7 +107,18 @@ jbootstrap.roleList = (function (jbootstrap, window, $) {
         });
     }
 
-
+    /**
+     * 初始化页面样式
+     */
+    function initControlStyle() {
+        $("#authorizationModal .modal-body").css({
+            "overflow-y": "auto",
+            "min-height": "400px",
+            "border-bottom": "1px solid #ddd",
+            "border-top": "1px solid #ddd",
+            "max-height": 600
+        });
+    }
 
     /**
      * 删除
@@ -117,7 +132,7 @@ jbootstrap.roleList = (function (jbootstrap, window, $) {
             type: "warning",
             showCancelButton: true,
             confirmButtonText: "确定",
-            cancelButtonText:"取消",
+            cancelButtonText: "取消",
             closeOnConfirm: false
         }, function () {
 
@@ -145,7 +160,7 @@ jbootstrap.roleList = (function (jbootstrap, window, $) {
                         });
                     }
                 },
-                error:function () {
+                error: function () {
                     showAjaxErrorMsg();
                 }
             });
@@ -154,9 +169,160 @@ jbootstrap.roleList = (function (jbootstrap, window, $) {
 
     }
 
+
+    /**
+     * 弹出授权模态框
+     * @param id
+     * @param description
+     */
+    var authorizeModalFunc = function (id, description) {
+
+        //设置当前修改角色的ID
+        $("#currRoleId").val(id);
+
+        //设置标题
+        $("#authorizationModal .modal-title").html("授权：" + description);
+
+        //获取当前角色拥有的资源
+        var resourceIds = [];
+        $.ajax({
+            async: false,
+            url: baseContextPath + "roles/resourceIds",
+            dataType: 'json',
+            data: {
+                roleId: id
+            },
+            success: function (data) {
+
+                resourceIds = data;
+            }
+        });
+
+        var treeObj = $.fn.zTree.getZTreeObj("parentIdTreeWrap");
+
+        //设置全不选中并且展开
+        treeObj.checkAllNodes(false);
+        treeObj.expandAll(true);
+
+        //获取树的所有节点
+        var node = treeObj.getNodes();
+        var nodes = treeObj.transformToArray(node);
+
+        //设置选中项
+        if (resourceIds != null && resourceIds.length > 0) {
+
+            $.each(nodes, function (index, treeNode) {
+
+                //当前节点ID包含在resourceIds中，则设置选中
+                if ($.inArray(treeNode.id, resourceIds) > -1) {
+
+                    treeObj.checkNode(treeNode, true);
+                }
+            })
+
+        }
+
+        $('#authorizationModal').modal('toggle');
+    }
+
+
+    /**
+     * 初始资源树
+     */
+    function initParentTree() {
+
+        //获取所有资源
+        $.ajax({
+            async: false,
+            url: baseContextPath + "resources/ztreeList",
+            dataType: 'json',
+            success: function (data) {
+                zNodes = data;
+            }
+        });
+
+
+        var setting = {
+            view: {
+                dblClickExpand: false
+            },
+            check: {
+                enable: true,
+                chkboxType: { "Y" : "s", "N" : "s" }
+            },
+            data: {
+                simpleData: {
+                    enable: true,
+                    pIdKey: "parentId"
+                }
+            }
+        };
+
+        $.fn.zTree.init($("#parentIdTreeWrap"), setting, zNodes);
+
+
+        //展开树节点
+        var treeObj = $.fn.zTree.getZTreeObj("parentIdTreeWrap");
+        treeObj.expandAll(true);
+    }
+
+
+    /**
+     * 保存授权信息
+     */
+    var authorizeSaveFunc = function () {
+
+        var roleId = $("#currRoleId").val();
+
+        var treeObj = $.fn.zTree.getZTreeObj("parentIdTreeWrap");
+        var nodes = treeObj.getCheckedNodes(true);
+        var resourceIdList= []; //选中的资源ID列表
+
+        $.each(nodes,function (index,node) {
+            resourceIdList.push(node.id);
+        })
+        
+
+        $.ajax({
+            type: "POST",
+            url: baseContextPath + "roles/saveAuthorize",
+            data:{
+                roleId:roleId,
+                resourceIdList:resourceIdList
+            },
+            async: false,
+            success: function(data) {
+
+                if (data.code === "6000") {
+
+                    swal({
+                        title: "保存成功！",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                } else {
+                    swal({
+                        title: "保存失败！",
+                        type: "error",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            },
+            error: function(request) {
+                showAjaxErrorMsg();
+            }
+        });
+    }
+
+
     return {
         ready: readyFunc,
         delRow: delRowFunc,
+        authorizeModal: authorizeModalFunc,
+        authorizeSave: authorizeSaveFunc
     };
 })(jbootstrap, window, jQuery);
 

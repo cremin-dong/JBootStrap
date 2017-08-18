@@ -12,7 +12,7 @@ jbootstrap.userAdd = (function (jbootstrap, window, $) {
      */
     function initPageOperate() {
 
-        //查询按钮
+        //保存按钮
         $(".btn-save").on("click", function () {
 
             if(  !$("#editForm").valid()){
@@ -35,9 +35,10 @@ jbootstrap.userAdd = (function (jbootstrap, window, $) {
                         });
 
 
-                        $.pjax({
+                        $.pjax.reload('#pjax-container', {
                             url: baseContextPath + "roles/list",
-                            container: '#pjax-container'
+                            fragment: '#pjax-container',
+                            timeout: 5000
                         });
 
 

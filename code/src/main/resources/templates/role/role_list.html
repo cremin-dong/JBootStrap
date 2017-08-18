@@ -12,7 +12,8 @@
             {{#if show}}
                 <div class="btn-group dataTables-row-operator">
                     <a title="编辑" data-pjax=""  href="{{editUrl}}" type="button"><i class="fa fa-edit"></i></a>
-                    <a title="删除"  type="button" href="#" onclick="jbootstrap.roleList.delRow('{{id}}')" ><i class="fa fa-trash-o"></i></a>
+                    <a title="删除"  type="button" href="#" onclick="jbootstrap.roleList.delRow('{{obj.id}}')" ><i class="fa fa-trash-o"></i></a>
+                    <a title="授权"  type="button" href="#" onclick="jbootstrap.roleList.authorizeModal('{{obj.id}}','{{obj.description}}')" ><i class="fa  fa-unlock-alt"></i></a>
                 </div>
             {{/if}}
         </script>
@@ -71,6 +72,25 @@
                 </table>
             </section>
             <!-- /.content -->
+        </div>
+
+        <div class="modal fade" id="authorizationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input id="currRoleId" type="hidden">
+                            <ul id="parentIdTreeWrap" class="ztree"></ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="button" class="btn btn-primary" onclick="jbootstrap.roleList.authorizeSave();">保存设置</button>
+                        </div>
+                    </div>
+                </div>
         </div>
 
         <script th:src="${urls.getForLookupPath('/js/pages/role/role_list.js')}"></script>

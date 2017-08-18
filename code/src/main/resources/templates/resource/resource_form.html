@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"  layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <div class="content-wrapper">
+
+        <section class="content-header">
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 系统管理</a></li>
+                <li><a data-pjax th:href="@{/resources/list}">资源管理</a></li>
+                <li class="active"> <span th:text="${isOperatorEdit?'资源编辑':'资源添加'}"></span> </li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- Info boxes -->
+            <div class=" row">
+                <form id="editForm"  role="form">
+
+                    <input name="id"  th:value="${resource.id}" type="hidden" id="id">
+
+                    <!-- text input -->
+                    <div class="form-group col-md-6">
+                        <label>资源名称</label>
+                        <input th:field="${resource.name}" type="text" name="name" class="form-control" placeholder="资源名称"  data-rule-required="true">
+                        <input th:value="${resource.name}"  type="hidden"  id="nameOldValue">
+                    </div>
+
+
+                    <!-- text input -->
+                    <div class="form-group col-md-6">
+                        <label>权限</label>
+                        <input th:field="${resource.permission}"  type="text" name="permission" class="form-control" placeholder="权限" data-rule-required="true" >
+                        <input th:value="${resource.permission}"  type="hidden"  id="permissionOldValue">
+                    </div>
+
+                    <!-- text input -->
+                    <div class="form-group col-md-6">
+                        <label>上级菜单</label>
+                        <input id="parentIdTree" type="text" readonly  class="form-control" onclick="jbootstrap.resourceAdd.showMenu();"/>
+                        <input id="parentIdVal"  th:field="${resource.parentId}"  type="hidden" name="parentId">
+                    </div>
+
+
+                    <!-- text input -->
+                    <div class="form-group col-md-6">
+                        <label>排序</label>
+                        <input th:field="${resource.sort}"  type="number" name="sort" class="form-control" placeholder="排序" 	min="1" max="9999" maxlength="4"  data-rule-required="true">
+                    </div>
+
+                    <!-- text input -->
+                    <div class="form-group col-md-6 type-operator-hide" th:classappend="${resource.type eq '1' ?'hide':''}">
+                        <label>href</label>
+                        <input th:field="${resource.href}"  type="text" name="href" class="form-control" placeholder="href">
+                    </div>
+
+                    <!-- text input -->
+                    <div class="form-group col-md-6 type-operator-hide" th:classappend="${resource.type eq '1' ?'hide':''}">
+                        <label>图标</label>
+                        <input th:field="${resource.icon}"  type="text" name="icon" class="form-control" placeholder="图标" >
+                    </div>
+
+                    <!-- text input -->
+                    <div class="form-group col-md-6">
+                        <label>类型</label>
+
+                        <div>
+                            <label class="radio-inline">
+                                <input  th:field="*{resource.type}" type="radio" value="0" name="type" required data-msg-required="类型必选">
+                                菜单
+                            </label>
+                            <label class="radio-inline">
+                                <input  th:field="*{resource.type}" type="radio" value="1" name="type">
+                                操作
+                            </label>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2 pull-right">
+                    <button type="button" class="btn btn-block btn-primary btn-flat btn-save">保存</button>
+                </div>
+                <div class="col-md-2 pull-right">
+                    <a th:href="@{/resources/list}" data-pjax type="button" class="btn btn-block btn-default btn-flat">返回</a>
+                </div>
+            </div>
+
+
+            <div id="menuContent" class="menuContent" style="display:none; position: absolute;">
+                <ul id="parentIdTreeWrap" class="ztree"></ul>
+            </div>
+
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+
+        <script th:src="${urls.getForLookupPath('/js/pages/resource/resource_form.js')}"></script>
+    </div>
+</div>
+
+</body>
+</html>

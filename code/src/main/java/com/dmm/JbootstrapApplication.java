@@ -1,6 +1,5 @@
 package com.dmm;
 
-import com.dmm.common.Interceptor.PjaxInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,8 +8,10 @@ import org.springframework.boot.web.servlet.ErrorPage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+@EnableTransactionManagement
 @SpringBootApplication
 @MapperScan(basePackages = "com.dmm.module.dao")
 

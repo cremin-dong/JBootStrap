@@ -1,0 +1,85 @@
+    <!DOCTYPE html>
+    <html xmlns:th="http://www.thymeleaf.org"  layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+    <head>
+        <title>Title111</title>
+    </head>
+    <body>
+
+    <div layout:fragment="content">
+
+
+        <div class="content-wrapper">
+
+            <section class="content-header">
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> 系统管理</a></li>
+                    <li class="active">资源管理</li>
+                </ol>
+            </section>
+
+            <section class="content">
+
+                <!-- 添加、刷新 -->
+                <div class="btn-group pull-right">
+                    <a type="button" href="/resources/form" data-pjax="" class="btn btn-primary " id="btn-add">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                    <button type="button" class="btn btn-primary " id="btn-re">
+                        <i class="fa fa-refresh"></i>
+                    </button>
+                </div>
+
+                <div class="clearfix"></div>
+            </section>
+
+            <!-- Main content -->
+            <section class="content" style="padding-top: 0">
+                <table id="tab-resourcelist" class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>资源名称</th>
+                        <th>类型</th>
+                        <th>权限</th>
+                        <th>排序</th>
+                        <th>href</th>
+                        <th>图标</th>
+                        <th>操作</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr  th:each="resource,iterStat : ${resourceList}" th:attr="data-tt-id=${resource.id},data-tt-parent-id=${resource.parentId}">
+                        <td nowrap th:text="${resource.name}">name</td>
+                        <td th:text="${resource.type eq '1'?'操作':'菜单'}">type</td>
+                        <td th:text="${resource.permission}">permission</td>
+                        <td th:text="${resource.sort}">sort</td>
+                        <td th:text="${resource.href}">href</td>
+                        <td th:text="${resource.icon}">icon</td>
+                        <td>
+                            <div class="btn-group dataTables-row-operator">
+                                <a title="编辑" data-pjax="" th:href="@{'/resources/form?id=' + ${resource.id}}" type="button"><i class="fa fa-edit"></i></a>
+                                <a title="删除" type="button" href="#" th:onclick="'jbootstrap.resourceList.delRow(\''+${resource.id}+'\')'"><i class="fa fa-trash-o"></i></a>
+
+                                <span th:if="${resource.type eq '0'}">
+                                    <a title="添加下级资源" data-pjax="" th:href="@{'/resources/form?parentId=' + ${resource.id}}" type="button"><i class="fa fa-plus-square-o"></i></a>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                    <!-- tbody是必须的 -->
+                </table>
+            </section>
+            <!-- /.content -->
+        </div>
+
+        <script th:src="${urls.getForLookupPath('/js/pages/resource/resource_list.js')}"></script>
+
+    </div>
+
+    </body>
+    </html>
+
+

@@ -2,6 +2,7 @@ package com.dmm.module.service;
 
 import com.dmm.common.core.AbstractBaseService;
 import com.dmm.module.dao.RoleMapper;
+import com.dmm.module.domain.Resource;
 import com.dmm.module.domain.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,4 +27,5 @@ public class RoleService extends AbstractBaseService<Role> {
 
         return roleMapper.selectByUserId(userId);
     }
+
 }

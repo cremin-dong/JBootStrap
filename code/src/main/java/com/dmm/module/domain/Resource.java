@@ -1,45 +1,28 @@
 package com.dmm.module.domain;
 
-import com.dmm.common.core.BaseDomain;
+import com.dmm.common.core.TreeDomain;
+import org.hibernate.validator.constraints.NotEmpty;
 
-public class Resource extends BaseDomain {
+
+public class Resource extends TreeDomain {
 
     public static final String TYPE_MENU = "0"; //菜单
 
     public static final String TYPE_OPERATOR = "1"; //操作
 
-    private String parentId;
-
-    private String parentIds;
-
+    @NotEmpty(message="名称不能为空")
     private String name;
-
-    private Long sort;
 
     private String href;
 
     private String icon;
 
+    @NotEmpty(message="类型不能为空")
     private String type;
 
+    @NotEmpty(message="权限不能为空")
     private String permission;
 
-
-    public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId == null ? null : parentId.trim();
-    }
-
-    public String getParentIds() {
-        return parentIds;
-    }
-
-    public void setParentIds(String parentIds) {
-        this.parentIds = parentIds == null ? null : parentIds.trim();
-    }
 
     public String getName() {
         return name;
@@ -49,13 +32,6 @@ public class Resource extends BaseDomain {
         this.name = name == null ? null : name.trim();
     }
 
-    public Long getSort() {
-        return sort;
-    }
-
-    public void setSort(Long sort) {
-        this.sort = sort;
-    }
 
     public String getHref() {
         return href;

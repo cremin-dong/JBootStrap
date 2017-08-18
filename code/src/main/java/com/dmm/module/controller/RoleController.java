@@ -5,8 +5,10 @@ import com.dmm.common.core.DataTablesPager;
 import com.dmm.common.core.ResponseCodeEnum;
 import com.dmm.common.utils.PageUtils;
 import com.dmm.common.utils.UserUtils;
+import com.dmm.module.domain.Resource;
 import com.dmm.module.domain.Role;
 import com.dmm.module.domain.User;
+import com.dmm.module.service.ResourceService;
 import com.dmm.module.service.RoleService;
 import com.dmm.module.service.UserService;
 import com.github.pagehelper.Page;
@@ -21,10 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 角色控制器Mode
@@ -37,6 +36,9 @@ public class RoleController {
 
     @Autowired
     RoleService roleService;
+
+    @Autowired
+    ResourceService resourceService;
 
     @RequestMapping(value = {"list", ""},method = RequestMethod.GET)
     public String list(Model model){
@@ -80,7 +82,10 @@ public class RoleController {
 
         //编辑
         if(StringUtils.isNotBlank(id)){
-           role = roleService.selectByPrimaryKey(id);
+            role = roleService.selectByPrimaryKey(id);
+            model.addAttribute("isOperatorEdit",true);
+        }else{
+            model.addAttribute("isOperatorEdit",false);
         }
 
         model.addAttribute("role",role);
@@ -162,6 +167,7 @@ public class RoleController {
                 }
 
                 Role role = new Role();
+                role.setDelFlag(Role.DEL_FLAG_NO);
                 role.setName(name);
 
                 List<Role> roles = roleService.selectBySelective(role);
@@ -194,6 +200,7 @@ public class RoleController {
                 }
 
                 Role role = new Role();
+                role.setDelFlag(Role.DEL_FLAG_NO);
                 role.setDescription(description);
 
                 List<Role> roles = roleService.selectBySelective(role);
@@ -212,5 +219,86 @@ public class RoleController {
 
     }
 
+
+    /**
+     * 根据角色ID获取角色拥有的资源
+     * @param roleId
+     * @return
+     */
+    @RequestMapping(value = "/resources",method = RequestMethod.GET)
+    @ResponseBody
+    public List<Resource> getRoleResources(@RequestParam("roleId")String roleId){
+
+
+        try{
+
+            return  resourceService.selectByRoleId(roleId);
+
+        }catch (Exception ex){
+            LOGGER.error("根据角色ID获取角色拥有的资源",ex);
+        }
+
+        return new ArrayList<>();
+
+    }
+
+
+    /**
+     * 根据角色ID获取角色拥有的资源Id列表
+     * @param roleId
+     * @return
+     */
+    @RequestMapping(value = "/resourceIds",method = RequestMethod.GET)
+    @ResponseBody
+    public List<String> getRoleResourceIds(@RequestParam("roleId")String roleId){
+
+        List<String> resourceIdList = new ArrayList<>();
+
+        try{
+
+            List<Resource> resourceList = resourceService.selectByRoleId(roleId);
+
+            if(CollectionUtils.isNotEmpty(resourceList)){
+                resourceList.forEach(item ->{
+                    resourceIdList.add(item.getId());
+                });
+            }
+
+        }catch (Exception ex){
+            LOGGER.error("根据角色ID获取角色拥有的资源",ex);
+        }
+
+        return resourceIdList;
+
+    }
+
+
+    /**
+     * 保存授权信息
+     * @param roleId 角色ID
+     * @param resourceIdList 资源ID列表
+     * @return
+     */
+
+    @RequestMapping(value = "/saveAuthorize",method = RequestMethod.POST)
+    @ResponseBody
+    public  BackResult<String> saveAuthorize(@RequestParam("roleId") String roleId,@RequestParam("resourceIdList[]") String[] resourceIdList){
+
+        BackResult<String> backResult = new BackResult<>();
+
+        try{
+
+            resourceService.saveAuthorize(roleId,resourceIdList);
+            backResult.setCode(ResponseCodeEnum.BACK_CODE_SUCCESS.value);
+
+        }catch (Exception ex){
+
+            LOGGER.error("保存角色信息异常",ex);
+            backResult.setCode(ResponseCodeEnum.BACK_CODE_FAIL.value);
+        }
+
+        return backResult;
+
+    }
 
 }

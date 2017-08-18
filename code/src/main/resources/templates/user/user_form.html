@@ -12,8 +12,8 @@
         <section class="content-header">
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> 系统管理</a></li>
-                <li><a th:href="@{/users/list}">用户管理</a></li>
-                <li class="active">用户添加</li>
+                <li><a data-pjax th:href="@{/users/list}">用户管理</a></li>
+                <li class="active"> <span th:text="${isOperatorEdit?'用户编辑':'用户添加'}"></span> </li>
             </ol>
         </section>
 
@@ -94,7 +94,7 @@
                     <button type="button" class="btn btn-block btn-primary btn-flat btn-save">保存</button>
                 </div>
                 <div class="col-md-2 pull-right">
-                    <a th:href="@{/users/list}" type="button" class="btn btn-block btn-default btn-flat">返回</a>
+                    <a th:href="@{/users/list}" data-pjax type="button" class="btn btn-block btn-default btn-flat">返回</a>
                 </div>
             </div>
 
