@@ -39,6 +39,11 @@
     where role_id = #{roleId,jdbcType=VARCHAR}
   </delete>
 
+  <delete id="deleteByResourceId">
+    delete from acl_role_resource
+    where resource_id = #{resourceId,jdbcType=VARCHAR}
+  </delete>
+
   <insert id="saveBatch" useGeneratedKeys="true" parameterType="java.util.List">
     insert into acl_role_resource (role_id,resource_id)
     values

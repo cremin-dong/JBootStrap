@@ -15,7 +15,14 @@ public interface RoleResourceMapper extends BaseMapper<RoleResource> {
 
 
     /**
-     *
+     * 根据资源ID删除
+     * @param resourceId
+     */
+    void deleteByResourceId(String resourceId);
+
+
+    /**
+     * 批量保存
      * @param roleResourceList
      */
     void saveBatch(List<RoleResource> roleResourceList);

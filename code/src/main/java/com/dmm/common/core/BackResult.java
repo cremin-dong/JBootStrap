@@ -20,7 +20,16 @@ public class BackResult<T> implements Serializable{
     private String exceptions;
     //返回数据
 	private T data;
-	
+
+	public BackResult() {
+	}
+
+	public BackResult(String code, String exceptions, T data) {
+		this.code = code;
+		this.exceptions = exceptions;
+		this.data = data;
+	}
+
 	public String getCode() {
 		return code;
 	}

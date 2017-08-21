@@ -34,4 +34,23 @@
     </trim>
   </insert>
 
+
+  <delete id="deleteByRoleId">
+    delete from acl_user_role
+    where role_id = #{roleId,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteByUserId">
+    delete from acl_user_role
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="saveBatch" useGeneratedKeys="true" parameterType="java.util.List">
+    insert into acl_user_role (user_id,role_id)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.userId},#{item.roleId})
+    </foreach>
+  </insert>
+
 </mapper>

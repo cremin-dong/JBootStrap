@@ -1,4 +1,4 @@
-package com.dmm.common.core;
+package com.dmm.common.constants;
 
 /**
  * Desc: 返回码枚举<br/>

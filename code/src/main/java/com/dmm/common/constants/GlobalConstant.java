@@ -1,4 +1,4 @@
-package com.dmm.common.core;
+package com.dmm.common.constants;
 
 /**
  * Created by cremin on 2017/8/12.

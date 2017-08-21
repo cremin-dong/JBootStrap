@@ -1,6 +1,6 @@
 package com.dmm.module.controller;
 
-import com.dmm.common.core.GlobalConstant;
+import com.dmm.common.constants.GlobalConstant;
 import com.dmm.module.domain.User;
 import com.dmm.module.service.UserService;
 import org.apache.shiro.SecurityUtils;
@@ -32,13 +32,13 @@ public class LoginController {
     UserService userService;
 
 
-    @RequestMapping(value = "/login",method= RequestMethod.GET)
-    public String welcome(Model model){
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String welcome(Model model) {
         return "login";
     }
 
-    @RequestMapping(value="/login",method= RequestMethod.POST)
-    public String login(@RequestParam("username") String username, @RequestParam("password") String password, Model model){
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String login(@RequestParam("username") String username, @RequestParam("password") String password, Model model) {
 
 
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
@@ -46,7 +46,7 @@ public class LoginController {
         //获取当前的Subject
         Subject currentUser = SecurityUtils.getSubject();
 
-        if(currentUser.isAuthenticated()||currentUser.isRemembered()){
+        if (currentUser.isAuthenticated() || currentUser.isRemembered()) {
             return "redirect:/";
         }
 
@@ -57,26 +57,26 @@ public class LoginController {
             //所以这一步在调用login(token)方法时,它会走到MyRealm.doGetAuthenticationInfo()方法中,具体验证方式详见此方法
             currentUser.login(token);
 
-        }catch(UnknownAccountException uae){
+        } catch (UnknownAccountException uae) {
             model.addAttribute("message", "未知账户");
-        }catch(IncorrectCredentialsException ice){
+        } catch (IncorrectCredentialsException ice) {
             model.addAttribute("message", "密码不正确");
-        }catch(LockedAccountException lae){
+        } catch (LockedAccountException lae) {
             model.addAttribute("message", "账户已锁定");
-        }catch(ExcessiveAttemptsException eae){
+        } catch (ExcessiveAttemptsException eae) {
             model.addAttribute("message", "用户名或密码错误次数过多");
-        }catch(AuthenticationException ae){
+        } catch (AuthenticationException ae) {
             model.addAttribute("message", "用户名或密码不正确");
         }
         //验证是否登录成功
-        if(currentUser.isAuthenticated()){
+        if (currentUser.isAuthenticated()) {
 
             Session session = currentUser.getSession();
             User user = userService.selectByUserName(username);
-            session.setAttribute(GlobalConstant.CURR_USER_SESSION_KEY,user);
+            session.setAttribute(GlobalConstant.CURR_USER_SESSION_KEY, user);
 
             return "redirect:/";
-        }else{
+        } else {
             token.clear();
             return "login";
         }
@@ -85,39 +85,37 @@ public class LoginController {
 
     @RequiresAuthentication
     @RequestMapping(value = "/")
-    public String index(Model model){
+    public String index(Model model) {
         return "index";
     }
 
     /**
      * 退出
+     *
      * @return
      */
-    @RequestMapping(value="/logout",method = RequestMethod.GET)
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String,Object> logout(){
+    public Map<String, Object> logout() {
         Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
-        try {
-            Subject subject = SecurityUtils.getSubject();
-            subject.getSession().setAttribute(GlobalConstant.CURR_USER_SESSION_KEY,null);
+        Subject subject = SecurityUtils.getSubject();
+        subject.getSession().setAttribute(GlobalConstant.CURR_USER_SESSION_KEY, null);
 
-            subject.logout();
-        } catch (Exception e) {
-            LOGGER.error("退出异常",e);
-        }
+        subject.logout();
         return resultMap;
     }
 
 
     /**
      * 根据用户名和明文密码获取加密后的值
+     *
      * @return
      */
     @RequiresAuthentication
-    @RequestMapping(value="/encryption/{username}/{password}",method = RequestMethod.GET)
+    @RequestMapping(value = "/encryption/{username}/{password}", method = RequestMethod.GET)
     @ResponseBody
-    public String encryption(@PathVariable("username")String username,@PathVariable("password") String password){
-        return new SimpleHash("MD5", password, username,2).toString();
+    public String encryption(@PathVariable("username") String username, @PathVariable("password") String password) {
+        return new SimpleHash("MD5", password, username, 2).toString();
     }
 
 }

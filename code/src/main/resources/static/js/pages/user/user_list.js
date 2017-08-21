@@ -1,7 +1,11 @@
 jbootstrap.userList = (function (jbootstrap, window, $) {
 
 
+    //dataTables 对象
     var table;
+
+    //所有角色数组
+    var allRoles;
 
     var readyFunc = function () {
 
@@ -78,7 +82,7 @@ jbootstrap.userList = (function (jbootstrap, window, $) {
                         var source = $("#tpl").html();
                         var template = Handlebars.compile(source);
 
-                        var context = {id: row.id, editUrl: baseContextPath + "users/form?id=" + row.id};
+                        var context = {id: row.id,username:row.username, editUrl: baseContextPath + "users/form?id=" + row.id};
                         var html = template(context);
 
                         return html;
@@ -196,10 +200,134 @@ jbootstrap.userList = (function (jbootstrap, window, $) {
 
     }
 
+
+
+    /**
+     * 弹出指定角色模态框
+     * @param id
+     * @param description
+     */
+    var assignRolesModalFunc = function (id, description) {
+
+        //设置当前修改用户的ID
+        $("#currUserId").val(id);
+
+        //设置标题
+        $("#assignRolesModal .modal-title").html("分配角色：" + description);
+
+        //角色数据为空，则初始化
+        if(!allRoles){
+            initAllRoles();
+        }
+
+        //取消选中
+        $('#assignRolesModal input:checkbox').iCheck('uncheck');
+
+        //获取当前用户拥有的角色
+        var roles = [];
+        $.ajax({
+            async: false,
+            url: baseContextPath + "users/roleIds",
+            dataType: 'json',
+            data: {
+                userId: id
+            },
+            success: function (data) {
+
+                roles = data;
+            }
+        });
+
+        //设置选中项
+        $('#assignRolesModal input:checkbox').each(function () {
+
+            //当前节点ID包含在roles中，则设置选中
+            if ($.inArray($(this).val(), roles) > -1) {
+
+                $(this).iCheck("check");
+            }
+        })
+
+
+        $('#assignRolesModal').modal('toggle');
+    }
+
+
+    /**
+     * 获取所有角色并填充模板
+     */
+    function initAllRoles(){
+
+        //获取所有角色
+        $.ajax({
+            async: false,
+            url: baseContextPath + "roles/listData",
+            dataType: 'json',
+            data: {
+            },
+            success: function (data) {
+                allRoles = data;
+            }
+        });
+
+
+        //填充所有角色的模板
+         var template = Handlebars.compile($("#tpl-allRoles").html());
+         $('#allRolesForm').append(template(allRoles));
+
+
+         //设定icheck选择
+        $('#assignRolesModal input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue'
+        });
+
+    }
+    
+    
+    var assignRolesSaveFunc = function() {
+
+        var userId = $("#currUserId").val();
+
+        $.ajax({
+            type: "POST",
+            url: baseContextPath + "users/saveAssignRoles",
+            data:$("#allRolesForm").serialize(),
+            async: false,
+            success: function(data) {
+
+                if (data.code === "6000") {
+
+                    $('#assignRolesModal').modal('toggle');
+
+                    swal({
+                        title: "保存成功！",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                } else {
+                    swal({
+                        title: "保存失败！",
+                        type: "error",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            },
+            error: function(request) {
+                showAjaxErrorMsg();
+            }
+        });
+    }
+
     return {
         ready: readyFunc,
         imgOnerror: imgOnerrorFunc,
+        assignRolesModal: assignRolesModalFunc,
         delRow: delRowFunc,
+        assignRolesSave:assignRolesSaveFunc,
     };
 })(jbootstrap, window, jQuery);
 

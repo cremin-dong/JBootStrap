@@ -46,6 +46,7 @@ public class ResourceService extends AbstractBaseService<Resource> {
     @Transactional
     public void delResourceAndChilds(String id) {
         resourceMapper.delResourceAndChilds(id);
+        roleResourceMapper.deleteByResourceId(id);
     }
 
 
@@ -86,9 +87,9 @@ public class ResourceService extends AbstractBaseService<Resource> {
                 resourceList.add(roleResource);
 
             });
-        }
 
-        roleResourceMapper.saveBatch(resourceList);
+            roleResourceMapper.saveBatch(resourceList);
+        }
 
     }
 }
